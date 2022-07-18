@@ -1,0 +1,200 @@
+openapi: "3.0.2"
+
+info:
+  title: REST OpenAPI example
+  version: "1.0"
+  description: REST OpenAPI example
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: number
+          description: RESTfull response status code
+        type:
+          type: string
+          description: Type of error returned
+        message:
+          type: string
+      required:
+        - status
+        - type
+        - message
+      additionalProperties: false
+
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        description:
+          type: string
+        rating:
+          type: number
+      required:
+        - title
+        - author
+        - description
+      additionalProperties: false
+
+  parameters:
+    bookId:
+      in: path
+      name: bookId
+      schema:
+        type: string
+      required: true
+      description: Book ID (uuid v4 format)
+
+  responses:
+    ErrorResponse:
+      description: Operation failed to execute
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NoContentResponse:
+      description: Operation completed successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+
+paths:
+  /books:
+    get:
+      summary: List of books
+      description: Returns the list of books in the library
+      tags:
+        - books
+      responses:
+        "200":
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+
+    post:
+      summary: Create a new book
+      description: Creates a new book
+      tags:
+        - books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Book"
+      responses:
+        "200":
+          description: ID of the new book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                  - id
+                additionalProperties: false
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "402":
+          $ref: "#/components/responses/ErrorResponse"
+        "409":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+
+
+  /books/${bookId}:
+    parameters:
+      - $ref: "#/components/parameters/bookId"
+
+    get:
+      summary: Get details of an existing book
+      description: Returns the full detail of an existing book
+      tags:
+        - book
+      responses:
+        "200":
+          description: Existing book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+
+    put:
+      summary: Update an existing book
+      description: Update any detail of an existing book
+      tags:
+        - book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Book"
+      responses:
+        "200":
+          description: ID of the updated book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                  - id
+                additionalProperties: false
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        #404
+        "409":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+
+    delete:
+      summary: Delete a book
+      description: Permanently delete a book
+      tags:
+        - books
+      responses:
+        "200":
+          $ref: "#/components/responses/NoContentResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "409":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+
+
