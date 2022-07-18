@@ -31,18 +31,21 @@ components:
     Book:
       type: object
       properties:
+        id:
+          type: number
         title:
           type: string
         author:
           type: string
-        description:
+        summary:
           type: string
         rating:
           type: number
       required:
+        - id
         - title
         - author
-        - description
+        - summary
       additionalProperties: false
 
   parameters:
@@ -50,9 +53,9 @@ components:
       in: path
       name: bookId
       schema:
-        type: string
+        type: number
       required: true
-      description: Book ID (uuid v4 format)
+      description: Book ID
 
   responses:
     ErrorResponse:
@@ -123,7 +126,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
 
   /books/${bookId}:
     parameters:
@@ -196,5 +198,3 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
-

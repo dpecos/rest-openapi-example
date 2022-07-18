@@ -1,15 +1,8 @@
 import express from "express";
 import http from "http";
-import fs from "fs";
-import swaggerUi from "swagger-ui-express";
-import yaml from "yaml";
-
-function setupOpenAPIUI(app: express.Application) {
-  const file = fs.readFileSync("api.yml", "utf8");
-  const openAPIContract = yaml.parse(file);
-
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIContract));
-}
+import { setupEndpoints } from "./controllers";
+import { setupOpenAPIValidation, setupSwaggerUI } from "./openapi";
+import bodyParser from "body-parser";
 
 function createServer(app: express.Application, port: number | null) {
   const serverMessage = (): void => {
@@ -20,8 +13,25 @@ function createServer(app: express.Application, port: number | null) {
     );
   };
   const server = http.createServer(app).listen(port, serverMessage);
+
+  server.on("close", async () => {
+    console.log("Server closed");
+  });
 }
 
 const app = express();
-setupOpenAPIUI(app);
+
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "10mb",
+    extended: false,
+  })
+);
+
+setupSwaggerUI(app);
+setupOpenAPIValidation(app);
+
+app.use(setupEndpoints());
+
 createServer(app, 3000);
