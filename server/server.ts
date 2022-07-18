@@ -21,17 +21,21 @@ function createServer(app: express.Application, port: number | null) {
 
 const app = express();
 
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(
-  bodyParser.urlencoded({
-    limit: "10mb",
-    extended: false,
-  })
-);
+app.use(express.json());
+app.use(express.text());
+app.use(express.urlencoded({ extended: false }));
 
 setupSwaggerUI(app);
 setupOpenAPIValidation(app);
 
 app.use(setupEndpoints());
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    message: err.message,
+    errors: err.errors,
+  });
+});
 
 createServer(app, 3000);
