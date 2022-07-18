@@ -114,7 +114,7 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: string
+                    type: number
                 required:
                   - id
                 additionalProperties: false
@@ -127,7 +127,7 @@ paths:
         "500":
           $ref: "#/components/responses/ErrorResponse"
 
-  /books/${bookId}:
+  /books/{bookId}:
     parameters:
       - $ref: "#/components/parameters/bookId"
 
@@ -170,7 +170,7 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: string
+                    type: number
                 required:
                   - id
                 additionalProperties: false

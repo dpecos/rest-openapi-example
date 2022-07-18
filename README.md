@@ -10,11 +10,27 @@ To run the server:
 npm run server
 ```
 
-To test the API:
+#### Testing the API
+
+To retrieve the list of books:
 
 ```
 curl http://localhost:3000/books | jq
 ```
+
+To retrieve a specific book:
+
+```
+curl http://localhost:3000/books/1 | jq
+```
+
+To create a new book:
+
+```
+curl -s --request POST --url http://localhost:3000/books --header 'content-type: application/json' --data '{"id": 2, "title" : "New book", "author": "New author", "summary" : "This is a new Book"}' | jq
+```
+
+#### Swagger UI
 
 You can visit the Swagger generated documentation at this link:
 
