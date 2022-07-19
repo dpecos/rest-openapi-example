@@ -1,5 +1,5 @@
 {
   "watch": ["server", "api.yml"],
   "ext": "ts",
-  "exec": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm ./server/server.ts"
+  "exec": "ts-node ./server/main"
 }

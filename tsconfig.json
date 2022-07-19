@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "ES2017",
     "esModuleInterop": true
-  },
-  "ts-node": {
-    "esm": true
   }
 }
